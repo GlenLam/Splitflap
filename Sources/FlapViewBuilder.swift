@@ -96,6 +96,14 @@ public final class FlapViewBuilder {
    id 1.0.
 	*/
   public var flipPointHeightFactor: CGFloat = 1.0
+
+  /**
+   Optional gradient layer for the background.
+   
+   If provided, this gradient will be used instead of backgroundColor.
+   The gradient layer will be automatically resized to fit the tile bounds.
+   */
+  public var gradientLayer: CAGradientLayer? = nil
 	
   // MARK: - Initializing a Flap View
 
@@ -112,14 +120,4 @@ public final class FlapViewBuilder {
   public init(buildBlock: FlapViewBuilderBlock) {
     buildBlock(self)
   }
-}
-
-extension FlapViewBuilder {
-    /**
-     Optional gradient layer for the background.
-     
-     If provided, this gradient will be used instead of backgroundColor.
-     The gradient layer will be automatically resized to fit the tile bounds.
-     */
-    public var gradientLayer: CAGradientLayer? = nil
 }
