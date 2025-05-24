@@ -35,6 +35,9 @@ final class TileView: UIView {
   fileprivate let mainLineView      = UIView()
   fileprivate let secondaryLineView = UIView()
 
+  // Add property to store gradient layer reference
+  fileprivate var backgroundGradientLayer: CAGradientLayer?
+	
   /// Defines the position and by the same time appearance of the tiles.
   enum Position {
     /// Tile positioned as a top leaf.
@@ -93,11 +96,36 @@ final class TileView: UIView {
     font = builder.font
 
     layer.masksToBounds = true
-    backgroundColor     = builder.backgroundColor
+	  
+	// Check if gradient layer is provided
+	if let templateGradient = builder.gradientLayer {
+	    // Create a new gradient layer for this tile
+	    let gradientLayer = CAGradientLayer()
+	    gradientLayer.colors = templateGradient.colors
+	    gradientLayer.startPoint = templateGradient.startPoint
+	    gradientLayer.endPoint = templateGradient.endPoint
+	    gradientLayer.locations = templateGradient.locations
+	    
+	    // Add gradient as background
+	    layer.insertSublayer(gradientLayer, at: 0)
+	    
+	    // Store reference for layout updates
+	    backgroundGradientLayer = gradientLayer
+	    
+	    // Use clear background since we have gradient
+	    backgroundColor = UIColor.clear
+	    digitLabel.backgroundColor = UIColor.clear
+	} else {
+	    // Fall back to solid background color
+	    backgroundColor = builder.backgroundColor
+	    digitLabel.backgroundColor = builder.backgroundColor
+	}
+
+    //backgroundColor     = builder.backgroundColor
 
     digitLabel.textAlignment   = builder.textAlignment
     digitLabel.textColor       = builder.textColor
-    digitLabel.backgroundColor = builder.backgroundColor
+    //digitLabel.backgroundColor = builder.backgroundColor
 	flipPointHeightFactor 	   = builder.flipPointHeightFactor
 
     addSubview(digitLabel)
@@ -116,6 +144,11 @@ final class TileView: UIView {
   override func layoutSubviews() {
     super.layoutSubviews()
 
+        // Update gradient layer frame to match view bounds
+        if let gradientLayer = backgroundGradientLayer {
+            gradientLayer.frame = bounds
+        }
+	  
     // Round corners
     let path: UIBezierPath
 
