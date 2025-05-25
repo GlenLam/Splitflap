@@ -143,13 +143,27 @@ import UIKit
     textAsToken = nil
 
     for (index, flap) in flaps.enumerated() {
-      let token: String?   = index < tokens.count ? tokens[index] : nil
+
+     // Calculate the token index for right alignment
+        let tokenIndex = index - (numberOfFlaps - tokens.count)
+        let token: String? = tokenIndex >= 0 && tokenIndex < tokens.count ? tokens[tokenIndex] : nil
+        
+        let rotationDuration = animated ? target.splitflap(self, rotationDurationForFlapAtIndex: index) : 0
+
+        if let t = token {
+            textAsToken = textAsToken ?? ""
+            textAsToken?.append(t)
+        }
+     
+     /*
+     let token: String?   = index < tokens.count ? tokens[index] : nil
       let rotationDuration = animated ? target.splitflap(self, rotationDurationForFlapAtIndex: index) : 0
 
       if let t = token {
         textAsToken = textAsToken ?? ""
         textAsToken?.append(t)
       }
+     */
 
       if animated {
         var flapBlock: (() -> ())?
